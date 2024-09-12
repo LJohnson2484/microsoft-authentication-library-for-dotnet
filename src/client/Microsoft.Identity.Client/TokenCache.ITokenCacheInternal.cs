@@ -1057,7 +1057,7 @@ namespace Microsoft.Identity.Client
             if (!string.IsNullOrEmpty(requestParameters.HomeAccountId))
             {
                 accounts.FilterWithLogging(
-                     acc => !acc.HomeAccountId.Identifier.Equals(requestParameters.HomeAccountId, StringComparison.OrdinalIgnoreCase),
+                     acc => acc.HomeAccountId.Identifier.Equals(requestParameters.HomeAccountId, StringComparison.OrdinalIgnoreCase),
                      logger,
                      "[GetAccounts] Filtering by accountID",
                      true);
