@@ -238,9 +238,18 @@ namespace Microsoft.Identity.Client.PlatformsCommon.Shared
             else
             {
                 RefreshTokenCacheDictionary.TryGetValue(partitionKey, out ConcurrentDictionary<string, MsalRefreshTokenCacheItem> partition);
-                
+
                 result = partition?.Select(kv => kv.Value)?.ToList() ?? CollectionHelpers.GetEmptyList<MsalRefreshTokenCacheItem>();
-                logger.Verbose(() => $"[Internal cache] GetAllRefreshTokens (with partition - exists? {partition != null})) found {result.Count} refresh tokens:");
+                if (logger.IsLoggingEnabled(LogLevel.Verbose))
+                {
+                    logger.Verbose(() => $"[Internal cache] GetAllRefreshTokens (with partition - exists? {partition != null})) found {result.Count} refresh tokens:");
+                    if (RefreshTokenCacheDictionary.Count == 1 && result.Count == 0)
+                    {
+                        logger.VerbosePii(
+                            () => $"[Internal cache] 0 RTs and 1 partition. Partition in cache is {RefreshTokenCacheDictionary.Keys.First()}", 
+                            () => "[Internal cache] 0 RTs and 1 partition] 0 RTs and 1 partition.");
+                    }
+                }
             }
 
             return result;
@@ -281,7 +290,18 @@ namespace Microsoft.Identity.Client.PlatformsCommon.Shared
             {
                 AccountCacheDictionary.TryGetValue(partitionKey, out ConcurrentDictionary<string, MsalAccountCacheItem> partition);
                 result = partition?.Select(kv => kv.Value)?.ToList() ?? CollectionHelpers.GetEmptyList<MsalAccountCacheItem>();
-                logger.Verbose(() => $"[Internal cache] GetAllAccounts (with partition - exists? {partition!=null}) found {result.Count} accounts.");
+                
+                if (logger.IsLoggingEnabled(LogLevel.Verbose))
+                {
+                    logger.Verbose(() => $"[Internal cache] GetAllAccounts (with partition - exists? {partition != null}) found {result.Count} accounts.");
+                    if (AccountCacheDictionary.Count == 1 && result.Count == 0)
+                    {
+                        // get dictionary first key                        
+                        logger.VerbosePii(
+                            () => $"[Internal cache] 0 RTs and 1 partition. Partition in cache is {AccountCacheDictionary.Keys.First()}",
+                            () => "[Internal cache] 0 RTs and 1 partition] 0 RTs and 1 partition.");
+                    }
+                }
             }
 
             return result;
