@@ -1845,7 +1845,7 @@ namespace Microsoft.Identity.Test.Unit.PublicApiTests
                     .ExecuteAsync()
                     .ConfigureAwait(false);
 
-                var acc = await app.GetAccountAsync("fopo").ConfigureAwait(false);
+                var acc = await app.GetAccountAsync("accountId").ConfigureAwait(false);
 
                 Assert.IsNull(acc);
             }
